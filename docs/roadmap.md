@@ -20,6 +20,7 @@ Goal: replace manual link re-exchange with a proper backend.
 * Server-based synchronization between linked accounts.
 * Obligations shared as requests between real accounts: the recipient can confirm, reject, or propose changes (a counteroffer).
 * Push notifications: reminders sent to another real user (optionally with a message), and notifications when one party requests to close an obligation.
+* Counter Mode increments (see `mvp.md`) push a live notification to the other linked party — e.g. "You now owe 3! Now 4! Now 5!" — this is the core of the app's playful, informal character, not just a functional reminder.
 * A request to close an obligation must be confirmed or rejected by the other party. The other party can also permanently hide/dismiss the obligation on their own side if they disagree.
 * Either party can propose edits to an obligation at any time.
 * Once real personal data (obligations between named real users) is stored on a server, data-protection responsibilities apply (secure storage, breach handling, and GDPR if EU users are involved). This needs its own decision record once v3 is scoped in detail — it is a real operational and legal commitment, not a formality.

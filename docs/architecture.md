@@ -2,8 +2,8 @@
 
 ## Layering
 
-* **UI layer** — screens for obligations, people, items/categories, statistics.
-* **Domain layer** — Obligation, Person, and Item/Category models; obligation status and lifecycle rules.
+* **UI layer** — screens for obligations, people, types, statistics.
+* **Domain layer** — Obligation, Person, and Type models; obligation status and lifecycle rules.
 * **Data layer** — local storage, accessed only through a repository interface (see `decisions/002-stable-ids-and-sync-readiness.md`). UI and domain code never call storage APIs directly.
 
 ## Why This Layering

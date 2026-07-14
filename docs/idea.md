@@ -16,8 +16,8 @@ Examples:
 
 ## Differentiation
 
-* Not limited to money: money, items, and actions are first-class obligation types, not an afterthought.
-* Custom, reusable item types (name + icon + color), so a recurring obligation kind (e.g. "beer") doesn't need to be redefined every time.
+* Not limited to money: money, items, and actions are all just differently-labeled instances of one underlying Type — not hardcoded, separate categories (see `mvp.md`).
+* Custom, reusable types (icon + color + name), so a recurring obligation kind doesn't need to be redefined every time.
 * Designed offline-first: fully usable without an account or network connection.
 * Long-term direction toward genuine two-sided exchange between real users (see `roadmap.md`), introduced deliberately in stages rather than required from day one.
 
@@ -27,9 +27,7 @@ Casual, informal contexts: roommates, friends, couples, families, and small grou
 
 ## Monetization
 
-* Free, with a skippable ad after the first 5 interactions, then roughly every 5 minutes of active use.
-* Paid subscription removes ads.
-* Monetization around later networked features (v2/v3) will be revisited once those versions are scoped in detail.
+Free, supported by ads, with a paid subscription to remove them. Exact mechanics (ad frequency, caps) are an implementation detail, not part of the product vision.
 
 ## Versioning Strategy
 
@@ -40,13 +38,3 @@ The project is deliberately split into three versions to manage engineering risk
 3. **v3** — real user accounts, server-based synchronization, and push notifications between users.
 
 A small number of foundational data-model decisions (stable per-obligation identifiers, explicit status values, timestamps, and a storage layer separated from the UI — see `decisions/002-stable-ids-and-sync-readiness.md`) are made starting in v1 specifically so v2 and v3 can be added later without rewriting the core. Beyond these specific decisions, v1 does not attempt to anticipate the rest of v2/v3's design.
-
-## Project Purpose
-
-1. A tool the author personally uses to track real obligations.
-2. A public portfolio project demonstrating product planning, documentation practice, offline-first mobile architecture, and staged, risk-aware version planning.
-3. A potential published consumer app (Google Play, later possibly iOS and web).
-
-## Name
-
-The name Depnime comes from the concept of debt and personal obligations. It replaced the working name `Gimony`, which turned out to already be widely used elsewhere. The broader "obligation" concept is not limited to money, but debt tracking remains the central, most recognizable use case.

@@ -4,50 +4,51 @@
 
 Version 1 is fully local. It has no user accounts, no network dependency, and no exchange of obligations between different installs. Reminders are local-only (notifications to yourself), never sent to another user. Sharing obligations between installs is deferred to v2; real accounts and server synchronization are deferred to v3. See `roadmap.md`.
 
+## Type
+
+A Type is a reusable definition, not a fixed built-in category. It consists of:
+
+* **numeric kind** — one of:
+  * **Integer** — whole-number quantity (e.g. "3 bottles of cola," "15 flicks on the forehead")
+  * **Decimal** — quantity with a fractional part (e.g. money amounts)
+  * **Single** — no quantity; the obligation either exists or doesn't (e.g. "return my book")
+* **icon** — selected from a built-in catalogue grouped into categories (currencies, food and drinks, household items, books and documents, tools, general objects) for convenience while browsing; the grouping is not a structural constraint
+* **icon color**
+* **name** — freely chosen by the user
+
+There is no structural distinction between "money," "items," and "actions" — a Euro, a bottle of cola, and a returned favor are all just Types that differ only in numeric kind, icon, color, and name. The icon catalogue may suggest common currencies and items, but a user is free to repurpose any icon under any name.
+
+Once a Type has been used in an obligation, it is saved to the user's Type list and can be reused without re-entering its icon, color, or name.
+
+Quantities are only ever combined within the same Type — two Decimal Types both representing "money" (e.g. EUR and USD) are never auto-converted or added together, same as two different Integer Types are never combined.
+
 ## Core Entity: Obligation
 
-An obligation represents one specific commitment between the user and a Person. One obligation has exactly one type — Money, Item, or Action. If a person owes both money and an item, these are stored as two separate obligations. This keeps individual records simple and makes filtering, statistics, and status tracking predictable.
+An obligation represents one specific commitment between the user and a Person, using exactly one Type. If a person owes both, say, money and an item, these are stored as two separate obligations — this keeps individual records simple and makes filtering, statistics, and status tracking predictable.
 
-### Obligation Types
+### Fields
 
-**Money**
-
-* decimal amount
-* selected currency — currencies are tracked separately; no automatic conversion
+* Type (see above)
+* quantity, matching the Type's numeric kind (omitted for Single)
 * direction: `I owe` / `Owed to me`
-* optional comment
-
-**Item**
-
-* whole-number quantity
-* user-defined item (name, icon, color — reusable; see Custom Items below)
-* direction: `I owe` / `Owed to me`
-* optional comment
-
-**Action**
-
-* title or short description
-* direction: `I owe` / `Owed to me`
-* optional comment (no numeric quantity)
-
-### Shared Fields (all obligation types)
-
 * stable unique identifier (UUID), assigned at creation — required so v2/v3 can later reference the same obligation without redesigning the data model (see `decisions/002-stable-ids-and-sync-readiness.md`)
 * status: `Active` / `Completed` / `Closed`
 * creation timestamp
-* optional user-defined tag, for personal filtering
+* optional user-defined tag — the primary way to sub-divide obligations that share a Type (e.g. separating "serious" from "joke" obligations that both use the same Integer Type)
 * optional comment — informal context (why it was created, what was agreed), not a legal record
 * optional one-time reminder (date + time). Recurring reminder rules (weekly repetition, selected weekdays, repeat counts, end dates) may be added within v1 if time allows, otherwise deferred to a later pass
+
+## Counter Mode
+
+For obligations using an Integer Type, the quantity can be adjusted live with a single tap (+1 / -1), instead of being fixed once at creation. This supports situations where the final count isn't known in advance — for example, creating an obligation for "0 Snickers bars" before a game and tapping +1 each time a point is won, so the total is tracked live without being held in memory or calculated afterward.
+
+In v1, Counter Mode is purely local — adjusting the count doesn't notify anyone. See `roadmap.md` (v3) for the networked version, where increments push a live notification to the other party.
 
 ## People
 
 Obligations are linked to locally created Person records. A Person has a name, an optional description, an optional visual identifier, and shows every associated obligation (active, completed, closed) on their page. In v1, a Person is a local record only — not connected to any real Depnime account.
 
 A user may also record an obligation between two people other than themselves (e.g. "X owes Y"), purely as a personal, local note about an arrangement they're aware of.
-
-## Custom Items and Categories
-
-Users can define reusable item types while creating an obligation: a name, an icon selected from a built-in catalogue, and an icon color. Once used, the item is saved to the user's item list and can be reused without re-entering its name, icon, or color. The built-in icon catalogue is grouped into categories such as currencies, food and drinks, household items, books and documents, tools, and general objects.
 
 ## Obligation Status
 
@@ -57,16 +58,15 @@ Users can define reusable item types while creating an obligation: a name, an ic
 
 ## Statistics
 
-Displayed per saved item or currency — never combined across incompatible units (money in different currencies is not added together; actions are not included in numeric totals):
+Displayed per Type — never combined across different Types, even if both happen to represent money:
 
-* total owed to the user / owed by the user, per currency
-* total quantity owed, per item
-* active / completed / closed counts, overall and filtered by person, tag, type, or item
+* total owed to the user / owed by the user, per Type
+* active / completed / closed counts, overall and filtered by person, tag, or Type
 * average time to close an obligation
 
 ## Offline Requirement
 
-All core functionality must work fully without an account or internet connection: creating and editing obligations, completing or closing them, managing people, managing custom items, viewing history and statistics, and receiving local reminders.
+All core functionality must work fully without an account or internet connection: creating and editing obligations, completing or closing them, managing people, managing Types, viewing history and statistics, receiving local reminders, and using Counter Mode.
 
 ## Foundational Architecture Requirements
 
@@ -82,6 +82,6 @@ No further v2/v3 design is anticipated beyond these three points — see the ADR
 
 * Any exchange of obligations between different app installs
 * User accounts of any kind
-* Push notifications to other users
+* Push notifications to other users (including Counter Mode updates)
 * Currency conversion
 * Web version
